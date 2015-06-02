@@ -12,7 +12,8 @@ namespace MegaCodeChallengeWar
         private GamePlayer _player1;
         private GamePlayer _player2;
         private WarGameBoard _warGameBoard;
-        public string result { get; set; }
+        public string Result { get; set; }
+        public int NumberOfRounds { get; set; }
 
         public HousePlayer(DeckOfCards deckOfCards, GamePlayer player1, GamePlayer player2, WarGameBoard gameBoard)
         {
@@ -20,7 +21,8 @@ namespace MegaCodeChallengeWar
             this._player1 = player1;
             this._player2 = player2;
             this._warGameBoard = gameBoard;
-            this.result = "";
+            this.Result = "";
+            this.NumberOfRounds = 0;
         }
 
         public void DealCardsForWar()
@@ -49,7 +51,7 @@ namespace MegaCodeChallengeWar
             // Give to player
             player.HandOfCards.Add(card);
 
-            //Debug.Print(string.Format("{0} is dealt the {1}", player.Name, card.Name ));
+            this.Result += (string.Format("{0} is dealt the {1}<br />", player.Name, card.Name ));
         }
 
         private static bool IsEven(int value)
@@ -66,15 +68,18 @@ namespace MegaCodeChallengeWar
             //  Does not include War rounds
             for (int i = 0; i < NumberOfBattleRounds; i++)
             {
-                battle();
+                Debug.Assert(AreThereMoreCards(), "Heading to a Battle with NO cards");
                 
-                StillMoreCards = AreThereMoreCards();
-                
-                if (!StillMoreCards) break;
+                // Main Battle Routine - and calls War if needed, recursively
+                if (!Battle())
+                {
+                    Debug.Print("Ran out of cards");
+                    break;
+                }
             }
 
 
-            Debug.Print("In ConductBattles Method");
+            Debug.Print(string.Format("Finished Conduct of Battles - Finished with more Cards = {0}", StillMoreCards.ToString()));
         }
 
         private bool AreThereMoreCards()
@@ -83,10 +88,185 @@ namespace MegaCodeChallengeWar
             else return false;
         }
 
-        private void battle()
+        public bool Battle()
         {
+            PlayingCard card1;
+            PlayingCard card2;
 
+            // Check if each have a card to play with
+            if ((_player1.HandOfCards.Count < 1) || (_player2.HandOfCards.Count < 1))
+            {
+                // Dang, not enough cards to play - somebody lost
+                //  Leave bearing the bad news
+                return false;
+            }
+
+            // Take card from Player, put it on the board - then for other player
+            card1 = TakeCardPutOnBoard(_player1, _warGameBoard.player1Board);
+            card2 = TakeCardPutOnBoard(_player2, _warGameBoard.player2Board);
+
+            this.Result += string.Format("Battle Cards: {0} versus {1}<br />", card1.ToString(), card2.ToString());
+            this.Result += "Bounty ...<br />";
+            this.Result += string.Format("&nbsp{0}<br />&nbsp{1}<br />", card1.ToString(), card2.ToString());
+
+            if (card1.RankValue > card2.RankValue)
+            {
+                Debug.Print("Player 1 Won the Battle");
+                WinnerTakesBoard(_player1);
+                this.NumberOfRounds++;
+
+                this.Result += string.Format("<h3>{0} wins!</h3><br /><br />", _player1.Name);
+            }
+            else if (card1.RankValue < card2.RankValue)
+            {
+                Debug.Print("Player 2 Won the Battle");
+                WinnerTakesBoard(_player1);
+                this.NumberOfRounds++;
+
+                this.Result += string.Format("<h3>{0} wins!</h3><br /><br />", _player2.Name);
+            }
+            else if (card1.RankValue == card2.RankValue)
+            {
+                Debug.Print("The Battle was a Tie - Time For WAR!!");
+                this.Result += "***************WAR***************<br /><br />";
+
+                // Check if there are enough cards to conduct War
+                if ((_player1.HandOfCards.Count >= 3) && (_player2.HandOfCards.Count >= 3))
+	            {
+                    // Good - enough cards to continue to play
+                    // After the war, if no cards left (false) then leave
+                    if (!War())
+                    {
+                        return false;
+                    }
+	            }
+                else
+                {
+                    // Not enough cards left by someone
+                    //  so leave - and figure out who won somewhere else
+                    return false;
+                }
+            }
+            else
+            {
+                Debug.Assert(false, "Should never get here");
+            }
+
+            return AreThereMoreCards();
         }
+
+        private bool War()
+        {
+            PlayingCard card1;
+            PlayingCard card2;
+            PlayingCard card3;
+            PlayingCard card4;
+            PlayingCard card5;
+            PlayingCard card6;
+
+            // Check if each have at least 3 cards to play with
+            if ((_player1.HandOfCards.Count < 3) || (_player2.HandOfCards.Count < 3))
+            {
+                // Dang, not enough cards to play - somebody lost
+                //  Leave bearing the bad news
+                return false;
+            }
+
+            // Take 3 cards from Player, put them on the board - then for other player
+            card1 = TakeCardPutOnBoard(_player1, _warGameBoard.player1Board);
+            card2 = TakeCardPutOnBoard(_player1, _warGameBoard.player1Board);
+            card3 = TakeCardPutOnBoard(_player1, _warGameBoard.player1Board);
+            card4 = TakeCardPutOnBoard(_player2, _warGameBoard.player2Board);
+            card5 = TakeCardPutOnBoard(_player2, _warGameBoard.player2Board);
+            card6 = TakeCardPutOnBoard(_player2, _warGameBoard.player2Board);
+
+            this.Result += string.Format("Battle Cards: {0} versus {1}<br />", card2.ToString(), card5.ToString());
+            this.Result += "Bounty ...<br />";
+            this.Result += string.Format("&nbsp{0}<br />&nbsp{1}<br />", card1.ToString(), card2.ToString());
+            
+            // Compare the Middle Card from each side
+            if (card2.RankValue > card5.RankValue)
+            {
+                Debug.Print("Player 1 Won the War");
+                WinnerTakesBoard(_player1);
+                this.NumberOfRounds++;
+            }
+            else if (card2.RankValue < card5.RankValue)
+            {
+                Debug.Print("Player 2 Won the War");
+                WinnerTakesBoard(_player1);
+                this.NumberOfRounds++;
+            }
+            else if (card2.RankValue == card5.RankValue)
+            {
+                Debug.Print("The War was a Tie - Time For ANOTHER WAR!!");
+
+                // Check if each have at least 3 cards to play with
+                if ((_player1.HandOfCards.Count < 3) || (_player2.HandOfCards.Count < 3))
+                {
+                    // Dang, not enough cards to play - somebody lost
+                    //  Leave bearing the bad news
+                    return false;
+                }
+
+                // Good - enough cards to continue to play
+                // After the war, if no cards left (false) then leave
+                // Isn't Recursion lovely?
+                if (!War())
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                Debug.Assert(false, "Should never get here");
+            }
+
+            return AreThereMoreCards();
+        }
+
+        private PlayingCard TakeCardPutOnBoard(GamePlayer player, List<PlayingCard> boardSlot)
+        {
+            PlayingCard card;
+
+            card = player.HandOfCards.First();
+            player.HandOfCards.Remove(card);
+            boardSlot.Add(card);
+
+            return card;
+        }
+
+        private void WinnerTakesBoard(GamePlayer player)
+        {
+            int i = player.HandOfCards.Count;
+            int j = _warGameBoard.player1Board.Count;
+            int k = _warGameBoard.player2Board.Count;
+            
+            // This should be the end result when it is all done
+            int endResult = i + j + k;
+            
+            // Pretty sure the two boards will always be equal
+            Debug.Assert(j == k);
+            
+            // Copy all the cards from Player1's board to the winner's hand
+            foreach (PlayingCard card in _warGameBoard.player1Board )
+            {
+                player.HandOfCards.Add(card);
+            }
+            // Now empty Player1's board
+            _warGameBoard.player1Board.Clear();
+
+            // Now do the same for Player2
+            foreach (PlayingCard card in _warGameBoard.player2Board)
+            {
+                player.HandOfCards.Add(card);
+            }
+            _warGameBoard.player2Board.Clear();
+
+            // Double check to make sure it worked correctly
+            Debug.Assert(player.HandOfCards.Count == endResult);
+        }
+
 
     }
 }

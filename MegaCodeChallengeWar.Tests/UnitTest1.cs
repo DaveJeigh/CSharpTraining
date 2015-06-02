@@ -225,7 +225,7 @@ namespace MegaCodeChallengeWar.Tests
             HousePlayer housePlayer = new HousePlayer(cardDeck, player1, player2, gameBoard);
             housePlayer.DealCardsForWar();
 
-            housePlayer.ConductBattles(3);
+            housePlayer.ConductBattles(2000);
 
         }
 

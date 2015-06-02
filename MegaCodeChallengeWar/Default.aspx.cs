@@ -33,10 +33,17 @@ namespace MegaCodeChallengeWar
             //InitialDeal
             result = "<h2>Dealing cards ...</h2><br />";
             housePlayer.DealCardsForWar();
+
+            result += housePlayer.Result;
+            housePlayer.Result = "";
             
             //BattleRounds - includes WarRounds
+            result += "<h2>Begin battle ...</h2><br />";
+
             housePlayer.ConductBattles(NumberOfBattleRounds);
-            
+
+            result += housePlayer.Result;
+
             //WinningCondition
             
             
