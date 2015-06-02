@@ -68,8 +68,10 @@ namespace MegaCodeChallengeWar
             int NumberOfShuffles = randomGen.Next(MinimumShuffles, MaximumPossibleShuffles +1);
             int i;
 
+            this.CutDeck();
             for (i = 0; i < NumberOfShuffles + 1; i++)
             {
+                this.CutDeck();
                 this.ShuffleDeck();
             }
         }
@@ -83,8 +85,9 @@ namespace MegaCodeChallengeWar
                 SetOfCards.Add(SetOfCards.ElementAt(0) );
                 SetOfCards.Remove(SetOfCards.ElementAt(0));
             }
-
         }
+
+
 
     }
 }

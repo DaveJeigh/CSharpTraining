@@ -18,18 +18,15 @@ namespace MegaCodeChallengeWar
         {
             string result = "";
             
-            result = "<h2>Setting Things Up ...</h2><br />";
-            
-            // Create Players and House
-            HousePlayer housePlayer = new HousePlayer();
-            GamePlayer gamePlayer1 = new GamePlayer();
-            GamePlayer gamePlayer2 = new GamePlayer();
-            
             //SetupWar
             DeckOfCards cardDeck = new DeckOfCards(DeckOfCards.DeckType.Standard);
             cardDeck.BuildDeck();
             cardDeck.PerformShuffles();
 
+            // Create Players and House
+            GamePlayer gamePlayer1 = new GamePlayer();
+            GamePlayer gamePlayer2 = new GamePlayer();
+            HousePlayer housePlayer = new HousePlayer(cardDeck, gamePlayer1, gamePlayer2 );
 
             //InitialDeal
             result = "<h2>Dealing cards ...</h2><br />";
