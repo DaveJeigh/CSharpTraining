@@ -17,6 +17,7 @@ namespace MegaCodeChallengeWar
         protected void playButton_Click(object sender, EventArgs e)
         {
             string result = "";
+            const int NumberOfBattleRounds = 20;
             
             //SetupWar
             DeckOfCards cardDeck = new DeckOfCards(DeckOfCards.DeckType.Standard);
@@ -26,17 +27,15 @@ namespace MegaCodeChallengeWar
             // Create Players and House
             GamePlayer gamePlayer1 = new GamePlayer("Tim");
             GamePlayer gamePlayer2 = new GamePlayer("Steve");
-            HousePlayer housePlayer = new HousePlayer(cardDeck, gamePlayer1, gamePlayer2 );
+            WarGameBoard gameBoard = new WarGameBoard();
+            HousePlayer housePlayer = new HousePlayer(cardDeck, gamePlayer1, gamePlayer2, gameBoard);
 
             //InitialDeal
             result = "<h2>Dealing cards ...</h2><br />";
             housePlayer.DealCardsForWar();
             
-            //BattleRound
-            
-            
-            //WarRound
-            
+            //BattleRounds - includes WarRounds
+            housePlayer.ConductBattles(NumberOfBattleRounds);
             
             //WinningCondition
             

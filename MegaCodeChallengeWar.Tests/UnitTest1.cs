@@ -182,8 +182,9 @@ namespace MegaCodeChallengeWar.Tests
             Assert.IsNotNull(player1.HandOfCards);
 
             GamePlayer player2 = new GamePlayer("Don");
+            WarGameBoard gameBoard = new WarGameBoard();
 
-            HousePlayer housePlayer = new HousePlayer(cardDeck, player1, player2);
+            HousePlayer housePlayer = new HousePlayer(cardDeck, player1, player2, gameBoard);
             Assert.IsNotNull(housePlayer);
         }
 
@@ -196,8 +197,9 @@ namespace MegaCodeChallengeWar.Tests
             cardDeck.PerformShuffles();
             GamePlayer player1 = new GamePlayer("Jimmy");
             GamePlayer player2 = new GamePlayer("Teresa");
+            WarGameBoard gameBoard = new WarGameBoard();
 
-            HousePlayer housePlayer = new HousePlayer(cardDeck, player1, player2);
+            HousePlayer housePlayer = new HousePlayer(cardDeck, player1, player2, gameBoard);
             housePlayer.DealCardsForWar();
 
             Assert.AreEqual(player1.HandOfCards.Count, 26);
@@ -211,6 +213,21 @@ namespace MegaCodeChallengeWar.Tests
             Assert.IsNotNull(myBoard);
         }
 
+        [TestMethod]
+        public void TestConductBattles()
+        {
+            DeckOfCards cardDeck = new DeckOfCards(DeckOfCards.DeckType.Standard);
+            cardDeck.BuildDeck();
+            cardDeck.PerformShuffles();
+            GamePlayer player1 = new GamePlayer("Jimmy");
+            GamePlayer player2 = new GamePlayer("Teresa");
+            WarGameBoard gameBoard = new WarGameBoard();
+            HousePlayer housePlayer = new HousePlayer(cardDeck, player1, player2, gameBoard);
+            housePlayer.DealCardsForWar();
+
+            housePlayer.ConductBattles(3);
+
+        }
 
     }
 }
