@@ -78,6 +78,22 @@ namespace MegaCodeChallengeWar
                 }
             }
 
+            if (_player1.HandOfCards.Count > _player2.HandOfCards.Count)
+            {
+                this.Result += string.Format("{0} wins!<br />", _player1.Name );
+            }
+            else if (_player1.HandOfCards.Count < _player2.HandOfCards.Count)
+            {
+                this.Result += string.Format("{0} wins!<br />", _player2.Name );
+            }
+            else
+            {
+                Debug.Assert(false, "This should not happen");
+                this.Result += string.Format("Nobody wins - we have a tie!<br />");
+            }
+
+            this.Result += string.Format("{0}: {1}<br />", _player1.Name, _player1.HandOfCards.Count.ToString());
+            this.Result += string.Format("{0}: {1}<br />", _player2.Name, _player2.HandOfCards.Count.ToString());
 
             Debug.Print(string.Format("Finished Conduct of Battles - Finished with more Cards = {0}", StillMoreCards.ToString()));
         }
@@ -106,8 +122,8 @@ namespace MegaCodeChallengeWar
             card2 = TakeCardPutOnBoard(_player2, _warGameBoard.player2Board);
 
             this.Result += string.Format("Battle Cards: {0} versus {1}<br />", card1.ToString(), card2.ToString());
-            this.Result += "Bounty ...<br />";
-            this.Result += string.Format("&nbsp{0}<br />&nbsp{1}<br />", card1.ToString(), card2.ToString());
+            //this.Result += "Bounty ...<br />";
+            //this.Result += string.Format("&nbsp{0}<br />&nbsp{1}<br />", card1.ToString(), card2.ToString());
 
             if (card1.RankValue > card2.RankValue)
             {
@@ -115,7 +131,7 @@ namespace MegaCodeChallengeWar
                 WinnerTakesBoard(_player1);
                 this.NumberOfRounds++;
 
-                this.Result += string.Format("<h3>{0} wins!</h3><br /><br />", _player1.Name);
+                this.Result += string.Format("<h4>{0} wins!</h4><br />", _player1.Name);
             }
             else if (card1.RankValue < card2.RankValue)
             {
@@ -123,7 +139,7 @@ namespace MegaCodeChallengeWar
                 WinnerTakesBoard(_player1);
                 this.NumberOfRounds++;
 
-                this.Result += string.Format("<h3>{0} wins!</h3><br /><br />", _player2.Name);
+                this.Result += string.Format("<h4>{0} wins!</h4><br />", _player2.Name);
             }
             else if (card1.RankValue == card2.RankValue)
             {
@@ -181,8 +197,6 @@ namespace MegaCodeChallengeWar
             card6 = TakeCardPutOnBoard(_player2, _warGameBoard.player2Board);
 
             this.Result += string.Format("Battle Cards: {0} versus {1}<br />", card2.ToString(), card5.ToString());
-            this.Result += "Bounty ...<br />";
-            this.Result += string.Format("&nbsp{0}<br />&nbsp{1}<br />", card1.ToString(), card2.ToString());
             
             // Compare the Middle Card from each side
             if (card2.RankValue > card5.RankValue)
@@ -190,12 +204,14 @@ namespace MegaCodeChallengeWar
                 Debug.Print("Player 1 Won the War");
                 WinnerTakesBoard(_player1);
                 this.NumberOfRounds++;
+                this.Result += string.Format("<h4>{0} wins!</h4><br />", _player1.Name);
             }
             else if (card2.RankValue < card5.RankValue)
             {
                 Debug.Print("Player 2 Won the War");
-                WinnerTakesBoard(_player1);
+                WinnerTakesBoard(_player2);
                 this.NumberOfRounds++;
+                this.Result += string.Format("<h4>{0} wins!</h4><br />", _player2.Name);
             }
             else if (card2.RankValue == card5.RankValue)
             {
@@ -247,10 +263,14 @@ namespace MegaCodeChallengeWar
             
             // Pretty sure the two boards will always be equal
             Debug.Assert(j == k);
-            
+
+            this.Result += "Bounty ...<br />";
+            //this.Result += string.Format("&nbsp{0}<br />&nbsp{1}<br />", card1.ToString(), card2.ToString());
+
             // Copy all the cards from Player1's board to the winner's hand
             foreach (PlayingCard card in _warGameBoard.player1Board )
             {
+                this.Result += string.Format("&nbsp{0}<br />", card.ToString());
                 player.HandOfCards.Add(card);
             }
             // Now empty Player1's board
@@ -259,6 +279,7 @@ namespace MegaCodeChallengeWar
             // Now do the same for Player2
             foreach (PlayingCard card in _warGameBoard.player2Board)
             {
+                this.Result += string.Format("&nbsp{0}<br />", card.ToString());
                 player.HandOfCards.Add(card);
             }
             _warGameBoard.player2Board.Clear();
