@@ -204,6 +204,12 @@ namespace MegaCodeChallengeWar.Tests
             Assert.AreEqual(player2.HandOfCards.Count, 26);
         }
 
+        [TestMethod]
+        public void GameBoardConstructor()
+        {
+            WarGameBoard myBoard = new WarGameBoard();
+            Assert.IsNotNull(myBoard);
+        }
 
 
     }

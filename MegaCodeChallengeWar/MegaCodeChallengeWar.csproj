@@ -85,6 +85,7 @@
     <Compile Include="HousePlayer.cs" />
     <Compile Include="PlayingCard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WarGameBoard.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
