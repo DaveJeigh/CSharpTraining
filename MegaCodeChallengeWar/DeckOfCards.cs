@@ -9,7 +9,7 @@ namespace MegaCodeChallengeWar
     public class DeckOfCards
     {
         public DeckType DeckOfCardType { get; set; }
-        public Dictionary<int, PlayingCard> SetOfCards = new Dictionary<int, PlayingCard>();
+        public List<PlayingCard> SetOfCards = new List<PlayingCard>();
         private Random randomGen = new Random();
 
         public enum DeckType { Standard, StandardPlus2Jokers };
@@ -23,7 +23,6 @@ namespace MegaCodeChallengeWar
 
         public void BuildDeck(){
             PlayingCard iCard;
-            int j = 0;
 
             foreach (PlayingCard.SuiteType suiteType in Enum.GetValues(typeof(PlayingCard.SuiteType)))
             {
@@ -31,7 +30,7 @@ namespace MegaCodeChallengeWar
                 for (int i = 2; i < 15; i++)
                 {
                     iCard = new PlayingCard(i, suiteType);
-                    SetOfCards.Add(j++, iCard);
+                    SetOfCards.Add(iCard);
                 }
             }
         }
@@ -48,7 +47,7 @@ namespace MegaCodeChallengeWar
 
                 // Copy a reference of this card at this position to  
                 //   just past the last card (a temp holding location)
-                SetOfCards.Add(SetOfCards.Count, SetOfCards[i]);
+                SetOfCards.Add(SetOfCards[i]);
                 
                 // Set this position now to the randomly chosen card
                 SetOfCards[i] = SetOfCards[k];
@@ -57,7 +56,7 @@ namespace MegaCodeChallengeWar
                 SetOfCards[k] = SetOfCards[SetOfCards.Count - 1];
 
                 // Finally, remove the temporary card at the end
-                SetOfCards.Remove(SetOfCards.Count - 1);
+                SetOfCards.Remove(SetOfCards.ElementAt(SetOfCards.Count -1));
 
             }
         }
@@ -73,6 +72,18 @@ namespace MegaCodeChallengeWar
             {
                 this.ShuffleDeck();
             }
+        }
+
+        public void CutDeck()
+        {
+            int cutSelect = randomGen.Next(0, this.SetOfCards.Count);
+
+            for (int i = 0; i < cutSelect; i++)
+            {
+                SetOfCards.Add(SetOfCards.ElementAt(0) );
+                SetOfCards.Remove(SetOfCards.ElementAt(0));
+            }
+
         }
 
     }
