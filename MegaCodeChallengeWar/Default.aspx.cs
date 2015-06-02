@@ -25,6 +25,8 @@ namespace MegaCodeChallengeWar
             cardDeck.BuildDeck();
             cardDeck.PerformShuffles();
 
+            // Create Players and House
+
             //InitialDeal
             result = "<h2>Dealing cards ...</h2><br />";
             
