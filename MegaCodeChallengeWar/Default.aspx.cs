@@ -24,13 +24,13 @@ namespace MegaCodeChallengeWar
             cardDeck.PerformShuffles();
 
             // Create Players and House
-            GamePlayer gamePlayer1 = new GamePlayer();
-            GamePlayer gamePlayer2 = new GamePlayer();
+            GamePlayer gamePlayer1 = new GamePlayer("Tim");
+            GamePlayer gamePlayer2 = new GamePlayer("Steve");
             HousePlayer housePlayer = new HousePlayer(cardDeck, gamePlayer1, gamePlayer2 );
 
             //InitialDeal
             result = "<h2>Dealing cards ...</h2><br />";
-            
+            housePlayer.DealCardsForWar();
             
             //BattleRound
             
